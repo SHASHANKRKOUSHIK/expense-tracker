@@ -14,8 +14,8 @@ export default function Layout({ children }) {
           <Link className={loc.pathname === '/' ? styles.active : ''} to="/">Dashboard</Link>
           <Link className={loc.pathname === '/transactions' ? styles.active : ''} to="/transactions">Transactions</Link>
           <Link className={loc.pathname === '/monthly' ? styles.active : ''} to="/monthly">Monthly</Link>
+          <button className={styles.logout} onClick={() => signOut(auth)}>Logout</button>
         </div>
-        <button className={styles.logout} onClick={() => signOut(auth)}>Logout</button>
       </nav>
       <main className={styles.main}>{children}</main>
     </div>
