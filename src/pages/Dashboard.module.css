@@ -1,0 +1,87 @@
+.welcome { margin-bottom: 20px; }
+.welcomeText { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+.welcomeSub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.balanceCard { border-color: #7c3aed44; }
+.investCard {
+  border-color: #f59e0b44;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.investCard:hover { border-color: #f59e0b99; transform: translateY(-2px); }
+.label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.amount { font-size: 24px; font-weight: 700; letter-spacing: -1px; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.formCard, .chartCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+.tabs { display: flex; gap: 4px; margin-bottom: 16px; background: #12121a; border-radius: 10px; padding: 4px; }
+.tab, .activeTab {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab { background: transparent; color: var(--muted); }
+.activeTab { background: var(--accent); color: white; font-weight: 600; }
+.form { display: flex; flex-direction: column; gap: 8px; }
+.form label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.form input, .form select {
+  padding: 10px 12px;
+  background: #12121a;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: #f1f1f1;
+  font-size: 14px;
+  width: 100%;
+}
+.form input:focus, .form select:focus { outline: none; border-color: var(--accent); }
+.form select option { background: #1a1a24; }
+.submitBtn {
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  width: 100%;
+}
+.submitBtn:hover { opacity: 0.88; }
+.draftNote { font-size: 12px; color: var(--green); text-align: center; }
+.chartTitle { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+
+@media (max-width: 768px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .grid { grid-template-columns: 1fr; }
+  .amount { font-size: 20px; }
+}
+@media (max-width: 400px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .amount { font-size: 18px; }
+  .welcomeText { font-size: 18px; }
+}

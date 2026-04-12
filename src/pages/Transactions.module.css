@@ -1,0 +1,85 @@
+.title { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+.count { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.filterTabs {
+  display: flex;
+  gap: 4px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  flex-wrap: wrap;
+}
+.filterBtn, .activeFilter {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.filterBtn { background: transparent; color: var(--muted); }
+.activeFilter { background: var(--accent); color: white; font-weight: 600; }
+.selects { display: flex; gap: 8px; }
+.selects select {
+  padding: 8px 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: #f1f1f1;
+  font-size: 13px;
+}
+
+.list { display: flex; flex-direction: column; gap: 8px; }
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: border-color 0.15s;
+  gap: 8px;
+}
+.item:hover { border-color: #3a3a4a; }
+.left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meta { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.del {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+.del:hover { background: rgba(239,68,68,0.15); color: var(--red); }
+
+@media (max-width: 600px) {
+  .filterBar { gap: 8px; }
+  .filterBtn, .activeFilter { padding: 5px 9px; font-size: 12px; }
+}
