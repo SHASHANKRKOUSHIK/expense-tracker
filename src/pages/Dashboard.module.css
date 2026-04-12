@@ -55,6 +55,15 @@
   color: #f1f1f1;
   font-size: 14px;
   width: 100%;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.form input[type="date"] {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  color-scheme: dark;
 }
 .form input:focus, .form select:focus { outline: none; border-color: var(--accent); }
 .form select option { background: #1a1a24; }
