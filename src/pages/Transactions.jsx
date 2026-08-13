@@ -14,6 +14,12 @@ const EXPENSE_CATS_OBJ = {
   '🎁 Gifting': ['Gift', 'Other'],
   '🛍️ Shopping': ['Clothes', 'Electronics', 'Other'],
   '🏠 House': ['Rent', 'Electricity Bill', 'Maintenance', 'Gas Cylinder', 'Other'],
+  '💊 Medical': ['Tablets', 'Hospital Charges', 'Other'],
+  '📱 Subscriptions': ['OTT', 'Instagram', 'InShot', 'Other'],
+  '🧾 Bills & Loans': ['EMI', 'Credit Card', 'Loan', 'Other'],
+  '💑 Boyfriend': ['Outing', 'Gift', 'Other'],
+  '✈️ Travel': ['Flight', 'Hotel', 'Food', 'Local Transport', 'Other'],
+  '🧴 Essentials': ['Personal Care', 'Household', 'Other'],
   '💸 Other': ['Other']
 }
 const INCOME_TYPES = ['Salary', 'Content Creation', 'Investment', 'Other (custom)']

@@ -3,6 +3,14 @@ import { useTransactions } from '../hooks/useTransactions'
 import { BarChart, Bar, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import styles from './Monthly.module.css'
 
+const EXPENSE_CATS = {
+  '🍽️ Food': [], '🛒 Grocery': [], '🎬 Entertainment': [],
+  '🚗 Vehicle': [], '🎁 Gifting': [], '🛍️ Shopping': [],
+  '🏠 House': [], '💊 Medical': [], '📱 Subscriptions': [],
+  '🧾 Bills & Loans': [], '💑 Boyfriend': [], '✈️ Travel': [],
+  '🧴 Essentials': [], '💸 Other': []
+}
+
 export default function Monthly() {
   const { transactions, investments } = useTransactions()
   const now = new Date()
@@ -28,10 +36,11 @@ export default function Monthly() {
   const totalInc = filteredIncome.reduce((s, t) => s + Number(t.amount), 0)
   const totalInv = filteredInvestments.reduce((s, t) => s + Number(t.amount), 0)
 
-  const cats = ['Food','Grocery','Movies','Vehicle','Gifts','Shopping','Rent']
-  const barData = cats.map(c => ({
-    name: c,
-    amount: filteredExpense.filter(t => t.category === c).reduce((s, t) => s + Number(t.amount), 0)
+  const cats = Object.keys(EXPENSE_CATS).map(c => c)
+  const barData = Object.keys(EXPENSE_CATS).map(cat => ({
+  name: cat.split(' ').slice(1).join(' '),
+  amount: filteredExpense.filter(t => t.category === cat).reduce((s, t) => s + Number(t.amount), 0),
+  fullName: cat
   })).filter(d => d.amount > 0)
 
   const months = ['01','02','03','04','05','06','07','08','09','10','11','12']
@@ -88,8 +97,8 @@ export default function Monthly() {
               />
               <Bar dataKey="amount" radius={[4,4,0,0]}>
                 {barData.map((_, i) => (
-                <Cell key={i} fill={['#7c3aed','#3b82f6','#22c55e','#f59e0b','#ef4444','#ec4899','#14b8a6'][i % 7]} />
-              ))}
+                  <Cell key={i} fill={['#7c3aed','#3b82f6','#22c55e','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316','#8b5cf6','#06b6d4','#84cc16','#f43f5e','#a855f7','#10b981'][i % 14]} />
+                ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
