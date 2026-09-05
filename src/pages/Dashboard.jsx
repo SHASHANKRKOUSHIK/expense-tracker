@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTransactions } from '../hooks/useTransactions'
 import { auth } from '../firebase'
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { BarChart, Bar, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import toast from 'react-hot-toast'
 import styles from './Dashboard.module.css'
 
@@ -14,14 +14,19 @@ const EXPENSE_CATS = {
   '🎁 Gifting': ['Gift', 'Other'],
   '🛍️ Shopping': ['Clothes', 'Electronics', 'Other'],
   '🏠 House': ['Rent', 'Electricity Bill', 'Maintenance', 'Gas Cylinder', 'Other'],
+  '💊 Medical': ['Tablets', 'Hospital Charges', 'Other'],
+  '📱 Subscriptions': ['OTT', 'Instagram', 'InShot', 'Other'],
+  '🧾 Bills & Loans': ['EMI', 'Credit Card', 'Loan', 'Other'],
+  '💑 Boyfriend': ['Outing', 'Gift', 'Other'],
+  '✈️ Travel': ['Flight', 'Hotel', 'Food', 'Local Transport', 'Other'],
+  '🧴 Essentials': ['Personal Care', 'Household', 'Other'],
   '💸 Other': ['Other']
 }
-const PIE_COLORS = ['#7c3aed','#3b82f6','#22c55e','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316']
+const BAR_COLORS = ['#7c3aed','#3b82f6','#22c55e','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316','#8b5cf6','#06b6d4','#84cc16','#f43f5e','#a855f7','#10b981']
 const DRAFT_KEY = 'expense_tracker_draft'
 const emptyExpense = { date: new Date().toISOString().split('T')[0], category: '', subCategory: '', customCat: '', amount: '', description: '' }
 const emptyIncome = { type: 'Salary', customType: '', amount: '', date: new Date().toISOString().split('T')[0] }
 
-// Skeleton component
 function Skeleton({ width = '100%', height = 20, radius = 8 }) {
   return (
     <div style={{
@@ -33,7 +38,6 @@ function Skeleton({ width = '100%', height = 20, radius = 8 }) {
   )
 }
 
-// Empty state component
 function EmptyState({ icon, title, subtitle }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', gap: 12 }}>
@@ -41,17 +45,6 @@ function EmptyState({ icon, title, subtitle }) {
       <p style={{ color: '#f1f1f1', fontWeight: 600, fontSize: 15, textAlign: 'center' }}>{title}</p>
       <p style={{ color: 'var(--muted)', fontSize: 13, textAlign: 'center' }}>{subtitle}</p>
     </div>
-  )
-}
-
-// Custom pie label — hide if too small
-const renderLabel = ({ name, percent, x, y }) => {
-  if (percent < 0.05) return null
-  const shortName = name.split(' ').slice(1).join(' ') || name
-  return (
-    <text x={x} y={y} fill="#f1f1f1" textAnchor="middle" dominantBaseline="central" fontSize={11}>
-      {`${shortName} ${(percent * 100).toFixed(0)}%`}
-    </text>
   )
 }
 
@@ -76,12 +69,16 @@ export default function Dashboard() {
   const totalInvestment = investments.reduce((s, t) => s + Number(t.amount), 0)
   const balance = totalIncome - totalExpense - totalInvestment
 
-  // Pie data grouped by main category, only > 0
-  const pieData = Object.keys(EXPENSE_CATS).reduce((acc, cat) => {
+  // Bar chart data grouped by main category
+  const barData = Object.keys(EXPENSE_CATS).reduce((acc, cat) => {
     const total = transactions
       .filter(t => t.kind === 'expense' && t.category === cat)
       .reduce((s, t) => s + Number(t.amount), 0)
-    if (total > 0) acc.push({ name: cat, value: total })
+    if (total > 0) acc.push({
+      name: cat.split(' ').slice(1).join(' '),
+      amount: total,
+      fullName: cat
+    })
     return acc
   }, [])
 
@@ -111,6 +108,18 @@ export default function Dashboard() {
     setIncome(emptyIncome)
     localStorage.removeItem(DRAFT_KEY + '_income')
     toast.success('Income added!')
+  }
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div style={{ background: '#1a1a24', border: '1px solid #2a2a3a', borderRadius: 8, padding: '10px 14px' }}>
+          <p style={{ color: '#f1f1f1', fontWeight: 600, marginBottom: 4 }}>{payload[0]?.payload?.fullName}</p>
+          <p style={{ color: BAR_COLORS[0] }}>₹{Number(payload[0]?.value).toLocaleString('en-IN')}</p>
+        </div>
+      )
+    }
+    return null
   }
 
   return (
@@ -227,7 +236,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Right: Chart Card */}
+        {/* Right: Bar Chart Card */}
         <div className={styles.chartCard}>
           <h3 className={styles.chartTitle}>Expenses by Category</h3>
           {loading ? (
@@ -235,39 +244,40 @@ export default function Dashboard() {
               <Skeleton width="100%" height={200} radius={12} />
               <Skeleton width="60%" height={12} />
             </div>
-          ) : pieData.length === 0 ? (
+          ) : barData.length === 0 ? (
             <EmptyState
               icon="📊"
               title="No expenses yet"
               subtitle="Add your first expense to see the breakdown"
             />
           ) : (
-            <ResponsiveContainer width="100%" height={280}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={90}
-                  dataKey="value"
-                  labelLine={false}
-                  label={renderLabel}
-                >
-                  {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
-                </Pie>
-                <Tooltip
-                  formatter={(v, name) => [`₹${v.toLocaleString('en-IN')}`, name.split(' ').slice(1).join(' ')]}
-                  contentStyle={{ background: '#1a1a24', border: '1px solid #2a2a3a', borderRadius: 8, color: '#f1f1f1' }}
-                  labelStyle={{ color: '#f1f1f1' }}
-                  itemStyle={{ color: '#f1f1f1' }}
-                  cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={barData} margin={{ top: 10, right: 10, left: 0, bottom: 60 }}>
+                <XAxis
+                  dataKey="name"
+                  stroke="#6b7280"
+                  fontSize={11}
+                  angle={-35}
+                  textAnchor="end"
+                  interval={0}
+                  tick={{ fill: '#9ca3af' }}
                 />
-                <Legend formatter={(value) => value.split(' ').slice(1).join(' ')} />
-              </PieChart>
+                <YAxis
+                  stroke="#6b7280"
+                  fontSize={11}
+                  tick={{ fill: '#9ca3af' }}
+                  tickFormatter={(v) => `₹${v >= 1000 ? `${(v/1000).toFixed(0)}k` : v}`}
+                />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+                <Bar dataKey="amount" radius={[6,6,0,0]}>
+                  {barData.map((_, i) => (
+                    <Cell key={i} fill={BAR_COLORS[i % BAR_COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           )}
         </div>
-
       </div>
     </div>
   )
